@@ -29,7 +29,7 @@
 				alert(error.message);
 			}
 		});
-		触发：
+		触发上传：
 		uploader1.submit();or file.uploader.submit();
  */
 (function(){
@@ -42,7 +42,7 @@
 		attachment:'/api/1.1b/file/upyun/asset/uploadform'
 	};
 	
-
+	//错误类型
 	var uploadError = {
         'Not accept, Bucket not exists' : '不接受请求,空间不存在',
         'Authorize has expired' : '不接受请求,上传授权已过期',
