@@ -33,7 +33,9 @@
 		uploader1.submit();or file.uploader.submit();
  */
 (function(){
+	//回调函数唯一的id 自增
 	var funcid = 1;
+	//不同文件类型的上传时  form的action
 	var uploadForm = {
 		photo:'/api/1.1b/file/upyun/photo/uploadform',
 		avatar:'/api/1.1b/file/upyun/avatar/uploadform',
@@ -41,8 +43,9 @@
 		video:'/api/1.1b/file/upyun/video/uploadform',
 		attachment:'/api/1.1b/file/upyun/asset/uploadform'
 	};
+	var fileTypeList = ['photo','avatar','image','video','asset','attachment'];
 	
-	//错误类型
+	//上传错误类型
 	var uploadError = {
         'Not accept, Bucket not exists' : '不接受请求,空间不存在',
         'Authorize has expired' : '不接受请求,上传授权已过期',
@@ -73,6 +76,7 @@
 			dir:function(){}
 		}
 	}
+	//创建XMLHttpRequest
 	function createXhr() {
 		var request = null;
 		try {
@@ -215,6 +219,17 @@
 	function showMessage(msg){
 		alert(msg);
 	}
+
+	function isInArray(value,arr){
+		
+		for (var i = arr.length - 1; i >= 0; i--) {
+			if(value == arr[i]){
+				return true;
+			}
+		};
+
+		return false;
+	}
 	
 
 	/*
@@ -232,6 +247,11 @@
 			alert('表单form缺失');
 			return;
 		}
+
+		if(!isInArray(opts.fileType,fileTypeList)){
+			alert('文件类型不正确,文件格式包括'+fileTypeList.toString());
+			return;
+		}
 		
 		return new Uploader.prototype.init(opts);
 
@@ -243,10 +263,10 @@
 			var self=this;
 			//继承参数
 			extend(self,opts);
-			//如果已经封装过则跳过
+			/*//如果已经封装过则跳过
 			if(self.fileField.uploader){
 				return ;
-			}
+			}*/
 			self.uuid = (funcid++);
 			self.iframeName = 'uploaderIframe';//上传时对应的iframe
 			self.returnurl = 'http://'+location.host +'/api/1.1b/file/upyun/form/'+'uploadcallback_'+self.uuid;//iframe里回调的路径
@@ -281,10 +301,6 @@
 			if(!self.validate(file)){
 				return;
 			}
-			//alert(filePath.substring(0,filePath.lastIndexOf('.')));
-			//console.log(filePath.substring(0,filePath.lastIndexOf('.')))
-			
-	
 			//上传前处理函数
 			self.beforeStart && self.beforeStart(self.file);
 
@@ -303,12 +319,18 @@
 			});
 			
 		},
-		//验证文件 需浏览器支持HTML5
+		//验证文件 需浏览器支持HTML5 ......待完成 todo:
 		validate:function(file){
+			var rules = this.rules,fileType = this.fileType,extList = [];
+			//假如不支持HTML5则直接返回
 			if(!file){
 				return true;
 			}
 
+			if(isInArray(fileType,['image','photo','avatar'])){
+				extList = imageExtList;
+			}
+			//验证文件类型是否正确
 			console.log('file name ',file.name,' file type ',file.type,' file size ',file.size);
 
 			return true;
@@ -449,7 +471,6 @@
 				extension:extension
 			};
 			
-			//console.dir(file)
 			return file;
 			
 		},
@@ -457,9 +478,14 @@
 			var message = error.message;
 
 			alert(message);
+		},
+		changeFileType:function(fileType){
+			if(isInArray(fileType,fileTypeList)){
+				this.fileType =  fileType;
+			}else{
+				alert('文件类型有误',fileTypeList.toString());
+			}
 		}
-		
-
 
 	};
 
