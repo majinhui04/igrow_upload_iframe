@@ -30,8 +30,8 @@
                 uploader1.submit() 或者 file.uploader.submit()
 
 
-                view:
-                
+                demo:
+                <div id="result"><div/>
                 <form name="form1" id="form1"  >
         		
         		<p>
@@ -40,3 +40,26 @@
         		</p>
         	
         	   </form>
+
+               <script>
+                        //上传    
+                		var up = Uploader({
+                			fileField:document.getElementById('file1'),
+                			form:document.getElementById('form1'),
+                			fileType:'image',
+                			beforeStart:function(file){
+                				document.getElementById('result').innerHTML = '正在上传：'+file.value;
+                	           
+                			},
+                			success:function(result){
+                				document.getElementById('result').innerHTML = '<a href="'+result.url+'">'+result.url+'</a>';
+                			},
+                			fail:function(error){
+                				alert(error.message);
+                			}
+                		});
+                		document.getElementById('form1').onchange = function(){
+                			up.submit();
+                		}
+
+               </script>

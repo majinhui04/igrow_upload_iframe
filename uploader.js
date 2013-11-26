@@ -41,7 +41,8 @@
 		avatar:'/api/1.1b/file/upyun/avatar/uploadform',
 		image:'/api/1.1b/file/upyun/image/uploadform',
 		video:'/api/1.1b/file/upyun/video/uploadform',
-		attachment:'/api/1.1b/file/upyun/asset/uploadform'
+		attachment:'/api/1.1b/file/upyun/asset/uploadform',
+		asset:'/api/1.1b/file/upyun/asset/uploadform'
 	};
 	var fileTypeList = ['photo','avatar','image','video','asset','attachment'];
 	
@@ -328,7 +329,7 @@
 			}
 
 			if(isInArray(fileType,['image','photo','avatar'])){
-				extList = imageExtList;
+				//extList = [];
 			}
 			//验证文件类型是否正确
 			console.log('file name ',file.name,' file type ',file.type,' file size ',file.size);
@@ -347,9 +348,9 @@
 
 			if(type == 'image'){
 				params.imagetype = 'image' 
-			}else if(type == 'attachment'){
-				params.assettype = 'attachment';    
-				params.allowtype = 'zip,txt' ;
+			}else if(type == 'attachment' || type == 'asset'){
+				params.assettype = self.assettype || 'yo.work';    
+				
 			}
 
 			return params;
